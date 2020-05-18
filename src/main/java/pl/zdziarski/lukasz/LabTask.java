@@ -47,7 +47,9 @@ public class LabTask
 				case 2: {
 					System.out.println("How many values would you like to generate?");
 					int amount = scanner.nextInt();
-					generateMultiple(amount);
+					System.out.println("Would you like to view stats after generation? (y/n)");
+					boolean showLogs = scanner.next().equals("y");
+					generateMultiple(amount, showLogs);
 					break;
 				}
 				case 3: {
@@ -135,9 +137,16 @@ public class LabTask
 		generator.generate().print();
 	}
 
-	private void generateMultiple(int amount) {
+	private void generateMultiple(int amount, boolean showLogs) {
+		generator.clearLogs();
 		for (int i = 0; i < amount; i++) {
-			generate();
+			generator.generate().print();
+			if (showLogs) {
+				generator.log();
+			}
+		}
+		if (showLogs) {
+			generator.presentLogs(IGenerator.PresentationMode.RAW);
 		}
 	}
 

@@ -3,10 +3,7 @@ package pl.zdziarski.lukasz.generator;
 import javafx.util.Pair;
 import pl.zdziarski.lukasz.utils.Coord;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class CoordGenerator implements IGenerator<Coord> {
 	private final static int generationBound = 100;
@@ -197,18 +194,23 @@ public class CoordGenerator implements IGenerator<Coord> {
 		private void presentRaw() {
 			StringBuilder builder = new StringBuilder();
 			builder.append(initialMessage());
+			Map<Integer, Coord> sortedLogs = new TreeMap<>(Collections.reverseOrder());
 
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					int amount = logs[y][x];
 					if (amount > 0)	{
 						Coord coord = new Coord(x + 1, y + 1);
-						builder.append(coord.toString());
-						builder.append(": ");
-						builder.append(amount);
-						builder.append("\n");
+						sortedLogs.put(amount, coord);
 					}
 				}
+			}
+
+			for (Map.Entry<Integer, Coord> entry : sortedLogs.entrySet()) {
+				builder.append(entry.getValue());
+				builder.append(": ");
+				builder.append(entry.getKey());
+				builder.append("\n");
 			}
 
 			System.out.println(builder.toString());
