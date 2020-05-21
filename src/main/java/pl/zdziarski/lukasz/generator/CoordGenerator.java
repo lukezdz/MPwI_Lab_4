@@ -254,14 +254,14 @@ public class CoordGenerator implements IGenerator<Coord> {
 
 			builder.append(" yx");
 			for (int x = 0; x < width; x++) {
-				builder.append(String.format("%4d ", x));
+				builder.append(String.format("%6d ", x));
 			}
 			builder.append("\n");
 
 			for (int y = 0; y < height; y++) {
 				builder.append(String.format("%2d ", y));
 				for (int x = 0; x < width; x++) {
-					builder.append(String.format("%4d ", logs[y][x]));
+					builder.append(String.format("%6d ", logs[y][x]));
 				}
 				builder.append("\n");
 			}

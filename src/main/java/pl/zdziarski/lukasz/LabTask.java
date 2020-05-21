@@ -1,7 +1,6 @@
 package pl.zdziarski.lukasz;
 
 import pl.zdziarski.lukasz.exceptions.EmptyArgumentsException;
-import pl.zdziarski.lukasz.exceptions.InvalidValueException;
 import pl.zdziarski.lukasz.generator.CoordGenerator;
 import pl.zdziarski.lukasz.generator.IGenerator;
 
@@ -9,6 +8,7 @@ import java.util.Scanner;
 
 public class LabTask
 {
+	private static final int taskGenerationAmount = 100000;
 	private static final double[][] defaultTable = {
 			{0, 0.2, 0, 0},
 			{0, 0, 0, 0.05},
@@ -82,7 +82,7 @@ public class LabTask
 		System.out.println();
 		System.out.println("1. Generate one pair of values");
 		System.out.println("2. Generate multiple values");
-		System.out.println("3. Generate 1000 values and print logs");
+		System.out.println("3. Generate " + taskGenerationAmount + " values and print logs");
 		System.out.println("4. Reset generator with new values");
 		System.out.println("5. Quit");
 	}
@@ -129,7 +129,7 @@ public class LabTask
 
 	private void performLabTask() {
 		generator.clearLogs();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < taskGenerationAmount; i++) {
 			generator.generate().log();
 		}
 
