@@ -1,5 +1,7 @@
 package pl.zdziarski.lukasz;
 
+import pl.zdziarski.lukasz.exceptions.EmptyArgumentsException;
+import pl.zdziarski.lukasz.exceptions.InvalidValueException;
 import pl.zdziarski.lukasz.generator.CoordGenerator;
 import pl.zdziarski.lukasz.generator.IGenerator;
 
@@ -25,7 +27,7 @@ public class LabTask
 				handleResetting();
 			}
 			catch (Exception exception) {
-				System.out.println("Something went wrong with creating generator. Please read instructions carefully");
+				System.out.println(exception.getMessage());
 				System.out.println("Setting generator to default state. You can change it later by choosing 4 in menu");
 				initDefaultGenerator();
 			}
@@ -61,8 +63,7 @@ public class LabTask
 						handleResetting();
 					}
 					catch (Exception exception) {
-						System.out.println("Last configuration had an invalid option.");
-						System.out.println("Please read instructions carefully");
+						System.out.println(exception.getMessage());
 					}
 					break;
 				}
@@ -87,16 +88,24 @@ public class LabTask
 	}
 
 	private void initDefaultGenerator() {
-		generator = new CoordGenerator.Builder()
-				.withProbabilityTable(defaultTable)
-				.build();
+		try {
+			generator = CoordGenerator.builder()
+					.withProbabilityTable(defaultTable)
+					.build();
+		}
+		catch (EmptyArgumentsException emp) {
+			System.out.println(emp.getMessage());
+		}
 	}
 
 	private void handleResetting() throws Exception {
+		CoordGenerator.Builder builder = CoordGenerator.builder();
 		System.out.println("Please specify width of probability table: (default is 4)");
 		int width = scanner.nextInt();
+		builder.withWidth(width);
 		System.out.println("Please specify height of probability table: (default is 4)");
 		int height = scanner.nextInt();
+		builder.withHeight(height);
 		System.out.println("How many probabilities would you like to enter:");
 		int amount = scanner.nextInt();
 		System.out.println("Please specify cell index and its probability value:");
@@ -104,20 +113,14 @@ public class LabTask
 		System.out.println("\ty should be from 1 to " + height);
 		System.out.println("\tvalue should be any double with , as separator not a .");
 
-		CoordGenerator.Builder builder = new CoordGenerator.Builder();
-		builder.withWidth(width);
-		builder.withHeight(height);
 		for (int i = 0; i < amount; i++) {
 			System.out.print((i+1) + ". ");
-			System.out.print("x: ");
+			System.out.print("\tx: ");
 			int x = scanner.nextInt();
-			System.out.print("y: ");
+			System.out.print("\ty: ");
 			int y = scanner.nextInt();
-			System.out.print("value: ");
+			System.out.print("\tvalue: ");
 			double value = scanner.nextDouble();
-			if (x < 1 || x > width || y < 1 || y > height) {
-				throw new Exception();
-			}
 
 			builder.withCellValue(x - 1, y - 1, value);
 		}

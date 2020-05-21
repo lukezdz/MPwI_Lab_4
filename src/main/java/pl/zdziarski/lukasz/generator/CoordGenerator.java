@@ -1,6 +1,8 @@
 package pl.zdziarski.lukasz.generator;
 
-import javafx.util.Pair;
+import pl.zdziarski.lukasz.exceptions.EmptyArgumentsException;
+import pl.zdziarski.lukasz.exceptions.InvalidValueException;
+import pl.zdziarski.lukasz.utils.Pair;
 import pl.zdziarski.lukasz.utils.Coord;
 
 import java.util.*;
@@ -42,6 +44,10 @@ public class CoordGenerator implements IGenerator<Coord> {
 		}
 
 		scaleProbabilities();
+	}
+
+	public static Builder builder() {
+		return new Builder();
 	}
 
 	@Override
@@ -136,13 +142,20 @@ public class CoordGenerator implements IGenerator<Coord> {
 		probabilityValues[y][x] = value;
 	}
 
-	public static class Builder implements javafx.util.Builder<CoordGenerator> {
+	public static class Builder {
 		private int width = 4;
 		private int height = 4;
 		private Optional<double[][]> probabilityTable = Optional.empty();
 		private Optional<List<Pair<Coord, Double>>> probabilityValues = Optional.empty();
 
-		public CoordGenerator build() {
+		private Builder() {}
+
+		public CoordGenerator build() throws EmptyArgumentsException {
+			if (probabilityTable.isEmpty() && probabilityValues.isEmpty()) {
+				throw new EmptyArgumentsException(
+						String.format("No probability values were given. You need to specify at least 1 probability value."));
+			}
+
 			return new CoordGenerator(probabilityTable, probabilityValues, width, height);
 		}
 
@@ -151,7 +164,20 @@ public class CoordGenerator implements IGenerator<Coord> {
 			return this;
 		}
 
-		public Builder withCellValue(int x, int y, double value) {
+		public Builder withCellValue(int x, int y, double value) throws InvalidValueException {
+			if (x <= 0) {
+				throw new InvalidValueException("x", "width", false);
+			}
+			if (x > width) {
+				throw new InvalidValueException("x", "width", true);
+			}
+			if (y <= 0) {
+				throw new InvalidValueException("y", "height", false);
+			}
+			if (y > height) {
+				throw new InvalidValueException("y", "height", true);
+			}
+
 			if (probabilityValues.isEmpty()) {
 				probabilityValues = Optional.of(new ArrayList<>());
 			}
@@ -160,12 +186,18 @@ public class CoordGenerator implements IGenerator<Coord> {
 			return this;
 		}
 
-		public Builder withWidth(int width) {
+		public Builder withWidth(int width) throws InvalidValueException {
+			if (width <= 0 ) {
+				throw new InvalidValueException("width");
+			}
 			this.width = width;
 			return this;
 		}
 
-		public Builder withHeight(int height) {
+		public Builder withHeight(int height) throws InvalidValueException {
+			if (height <= 0) {
+				throw new InvalidValueException("height");
+			}
 			this.height = height;
 			return this;
 		}
