@@ -16,6 +16,7 @@ public class LabTask
 			{0.1, 0.2, 0, 0.05}
 	};
 	private final Scanner scanner = new Scanner(System.in);
+	private static IGenerator.PresentationMode presentationMode = IGenerator.PresentationMode.RAW;
 	private CoordGenerator generator;
 
 	public void run() {
@@ -68,6 +69,10 @@ public class LabTask
 					break;
 				}
 				case 5: {
+					setPresentationMode();
+					break;
+				}
+				case 6: {
 					return;
 				}
 				default: {
@@ -84,7 +89,8 @@ public class LabTask
 		System.out.println("2. Generate multiple values");
 		System.out.println("3. Generate " + taskGenerationAmount + " values and print logs");
 		System.out.println("4. Reset generator with new values");
-		System.out.println("5. Quit");
+		System.out.println("5. Set log presentation mode");
+		System.out.println("6. Quit");
 	}
 
 	private void initDefaultGenerator() {
@@ -149,7 +155,24 @@ public class LabTask
 			}
 		}
 		if (showLogs) {
-			generator.presentLogs(IGenerator.PresentationMode.RAW);
+			generator.presentLogs(presentationMode);
+		}
+	}
+
+	private void setPresentationMode() {
+		System.out.println("Available presentation modes:");
+		System.out.println("1. Raw");
+		System.out.println("2. Matrix");
+		System.out.print("Which would you like to use? ");
+		int choice = scanner.nextInt();
+		if (choice == 1) {
+			presentationMode = IGenerator.PresentationMode.RAW;
+		}
+		else if (choice == 2) {
+			presentationMode = IGenerator.PresentationMode.MATRIX;
+		}
+		else {
+			System.out.println("Invalid choice. Please choose 1 or 2");
 		}
 	}
 
